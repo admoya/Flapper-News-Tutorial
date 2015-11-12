@@ -1,3 +1,8 @@
+var mongoose = require('mongoose');
+require('./models/Posts');
+require('./models/Comments');
+mongoose.connect('mongodb://admin:admin@ds031098.mongolab.com:31098/flapper');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

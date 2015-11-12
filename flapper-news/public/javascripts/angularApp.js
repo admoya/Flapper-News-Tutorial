@@ -1,10 +1,16 @@
 var app = angular.module('flapperNews', ['ui.router']);
 
-app.factory('posts', [function(){
+app.factory('posts', ['$http', function(){
 	var o = {
 		posts: []
 	};
 	return o;
+
+	  o.getAll = function() {
+    return $http.get('/posts').success(function(data){
+      angular.copy(data, o.posts);
+    });
+  };
 }]);
 
 app.config([
@@ -14,10 +20,15 @@ function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
     .state('home', {
-      url: '/home',
-      templateUrl: '/home.html',
-      controller: 'MainCtrl'
-    })
+	  url: '/home',
+	  templateUrl: '/home.html',
+	  controller: 'MainCtrl',
+	  resolve: {
+	    postPromise: ['posts', function(posts){
+	      return posts.getAll();
+	    }]
+	  }
+	})
     .state('posts', {
 	  url: '/posts/{id}',
 	  templateUrl: '/posts.html',
